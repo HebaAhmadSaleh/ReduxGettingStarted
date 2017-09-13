@@ -11,9 +11,32 @@ class App extends Component {
     current: this.store.getState()
   }
 
+  componentWillMount() {
+    console.log('cwm');
+  }
 
+  componentDidMount() {
+       console.log('cdm');
+  }
+
+  componentWillUnmount() {
+    console.log('cwum');
+  }
+
+  componentWillUpdate() {
+    console.log('c w update');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('recieve',nextProps);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+        console.log('c did update');
+
+  }
   render() {
-
+console.log('rener');
     let inc = () => {
       this.store.dispatch({ type: 'INCREMENT' });
       this.setState({ current: this.store.getState() })
@@ -23,6 +46,17 @@ class App extends Component {
       this.setState({ current: this.store.getState() })
     }
 
+      let addTodo = () => {
+      this.store.dispatch({ type: 'ADD-TODO',added:{text:this.input.value,id:Math.random()} });
+      this.setState({ current: this.store.getState() });
+      this.input.value = '';
+
+		}
+		let removeTodo = (id) => {
+			console.log(id);
+			this.store.dispatch({ type: 'REMOVE-TODO',removedId:id});
+			this.setState({ current: this.store.getState() });
+		}
     return (
       <div className="App">
         <div className="App-header">
@@ -32,7 +66,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <p style={{ fontSize: 40, color: 'pink' }}>{this.store.getState()}</p>
+        {/* <p style={{ fontSize: 40, color: 'pink' }}>{this.store.getState()}</p> */}
         <button onClick={() => inc()}>
           INCREMENT
         </button>
@@ -41,9 +75,26 @@ class App extends Component {
           DECREMENT
         </button>
 
+        <input ref={ node=> this.input = node} />
+        <button onClick={() => addTodo()}>
+                Add Todo
+        </button>
+				{this.store.getState().map(item=><div key={item.id}><span >{item.text}  </span>
+				<button style={style} onClick={()=> removeTodo(item.id)}>x</button></div>)}
       </div>
     );
   }
+}
+
+const style = {
+	width: 80,
+	background: 'none',
+	cursor: 'pointer',
+	fontWeight:'bold',
+	fontFamily: 'voltaeftu-regular',
+	fontSize: 16,
+	color: "red",
+	border: 0,
 }
 
 export default App;
